@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+    var mins = 25, secs = 0;
+    var isrunning = false;
+    var ison = true;
+    var siren = new Audio('siren.mp3');    
+    var bell  = new Audio('bell.mp3');
+    var audioon = false;
+
+    function i2s(i) {
+	var s = '' + i;
+	if (i < 10)
+	    s = '0' + s;
+	return s;
+    }
+    
+    function str() {
+	s = i2s(mins) + ":" + i2s(secs);
+	if(mins == 0)
+		s = '<span style="color:red">' + s + '</span>';
+	else
+		s = '<span style="color:yellow">' + s + '</span>';
+	return s;
+    }
+    
+    function dec() {
+	if (secs > 0)
+	    secs--;
+	else {
+	    secs = 59;
+	    mins--;
+	}
+    }
+
+    function go() {
+        document.getElementById("counter").innerHTML = str();
+	run();
+    }
+    
+    function run() {
+	if (isrunning) {
+	    document.getElementById("counter").innerHTML = ison ? str() : "";
+	    if(mins == 0 && secs == 30)
+	    	bell.play();
+            if (mins == 0 && secs == 0) {
+		ison = !ison;
+		if(!audioon) {
+			bell.pause();
+			audioon = true;
+			siren.play();
+		}
+	    }
+	    else
+		dec();
+	}
+	setTimeout(run, 1000);
+    }
+</script>    
+
+</head>
+<body style="background: black; color: yellow" onload="go();">
+<form>
+    <input type="button" name="start" value="Start" onclick="isrunning = true;">
+    <input type="button" name="stop" value="Stop"  onclick="isrunning = false;">
+</form>
+<div id="counter" style="text-align:center; width: 90%; margin-left: auto; margin-right: auto; margin-top: 50px; font-size: 350px; font-family: monospace; font-weight: bold">
+</div>    
+</body>
+</html>
